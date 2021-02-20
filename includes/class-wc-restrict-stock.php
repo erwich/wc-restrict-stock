@@ -157,6 +157,13 @@ class Wc_Restrict_Stock {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		$this->loader->add_action( 'woocommerce_product_options_inventory_product_data', $plugin_admin, 'wcrs_create_inventory_restriction_field' );
+		$this->loader->add_action( 'woocommerce_product_options_inventory_product_data', $plugin_admin, 'wcrs_create_inventory_restriction_notes_field' );
+
+		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_admin, 'wcrs_save_inventory_restriction_field', 10, 2 );
+		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_admin, 'wcrs_save_inventory_restriction_notes_field', 10, 2 );
+
+
 	}
 
 	/**
@@ -173,14 +180,7 @@ class Wc_Restrict_Stock {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'woocommerce_product_options_inventory_product_data', $plugin_public, 'wcrs_create_inventory_restriction_field' );
-		$this->loader->add_action( 'woocommerce_product_options_inventory_product_data', $plugin_public, 'wcrs_create_inventory_restriction_notes_field' );
-
-		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_public, 'wcrs_save_inventory_restriction_field', 10, 2 );
-		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_public, 'wcrs_save_inventory_restriction_notes_field', 10, 2 );
-
 		$this->loader->add_action( 'woocommerce_add_to_cart_validation', $plugin_public, 'wcrs_process_cart_restrictions', 10, 3 );
-
 		$this->loader->add_action( 'woocommerce_after_cart_item_quantity_update', $plugin_public, 'wcrs_cart_update_quantity', 10, 4 );		
 
 	}

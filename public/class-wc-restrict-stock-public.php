@@ -100,60 +100,6 @@ class Wc_Restrict_Stock_Public {
 
 	}
 
-	/**
-	 * Register the custom field for tracking how much of a product to restrict
-	 *
-	 * @since    1.0.0
-	 */
-	public function wcrs_create_inventory_restriction_field() {
-		woocommerce_wp_text_input(
-			array(
-				'id' => 'wcrs_restrict_count',
-				'label' => __( 'Quantity to restrict', 'woocommerce' ),
-				'class' => 'wcrs-custom-field',
-				'desc_tip' => true,
-				'description' => __( 'If you wish to only allow a certain number of this item to be purchased in one order, set that amount here.', 'woocommerce' ),
-				'value' => get_post_meta( get_the_ID(), 'wcrs_restrict_count', true ),
-				'type' => 'number',
-				'custom_attributes' => array(
-					'step' 	=> 'any',
-					'min'	=> '0'
-				) 
-			)
-		);
-	}
-
-	/**
-	 * Register the custom field for tracking notes about quantity restrictions
-	 *
-	 * @since    1.0.0
-	 */
-	public function wcrs_create_inventory_restriction_notes_field() {
-		woocommerce_wp_text_input(
-			array(
-				'id' => 'wcrs_restrict_count_notes',
-				'label' => __( 'Restriction Notes', 'woocommerce' ),
-				'class' => 'wcrs-custom-field',
-				'desc_tip' => true,
-				'description' => __( 'Optional note that will display on products that have purchase count restrictions.', 'woocommerce' ),
-				'value' => get_post_meta( get_the_ID(), 'wcrs_restrict_count_notes', true ),
-				'type' => 'text'
-			)
-		);
-	}
-
-	public function wcrs_save_inventory_restriction_field( $id, $post ) {
-		/* Sanitize for numeric, and ensure it's a positive int */
-		$restrict_count = is_numeric( $_POST['wcrs_restrict_count'] ) ?
-			max( 0, intval( $_POST['wcrs_restrict_count'] ) )
-			: 0;
-		update_post_meta( $id, 'wcrs_restrict_count', $restrict_count );
-	}
-
-	public function wcrs_save_inventory_restriction_notes_field( $id, $post ) {
-		update_post_meta( $id, 'wcrs_restrict_count_notes', sanitize_text_field( $_POST['wcrs_restrict_count_notes'] ) );
-	}
-
 	function get_restriction_quantity_notes( $id ) {
 		$notes = wc_get_product( $id ) -> get_meta( 'wcrs_restrict_count_notes' );
 		$restrict_count = wc_get_product( $id ) -> get_meta( 'wcrs_restrict_count' );
