@@ -12,14 +12,19 @@ A basic plugin that can enforce quantity limits for products in WooCommerce Orde
 
 == Description ==
 
-This plugin came out of a use-case of a shop owner who wanted to be able to impose quantity limits when ordering certain products 
-on his online WooCommerce shop.
+This plugin came out of a use-case of a shop owner running a hybrid online and brick-and-mortar store, needing greater 
+control of restrictions on selling products online. Imagine a local customer calls in and asks you to set aside a copy of a 
+new board game, and you want to make sure that they don't all sell online. Or, you're pushing a hot new release and want to deter 
+scalping bots and/or wholesale buyers from buying more than a handful of a certain product per transaction.
 
-Enter Restrict Stock for WooCommerce - a very small, simple, and lightweight plugin that can do just that. Upon installation, two new fields 
-will be added to the _Product > Inventory_ interface for all products called "Quantity to restrict," and "Restriction Notes." The number 
-entered into the "Quantity to restrict" field is the maximum number of this product that a customer can purchase in one order. The 
-"Restriction Notes" field holds the custom error message that will be shown when a customer tries to add more than the allowed number of 
-this product into their cart. 
+Enter Restrict Stock for WooCommerce - a very small, simple, and lightweight plugin that gives greater control over how the stock of your 
+products are displayed and interacted with in the checkout process. Upon installation, a new group of new fields 
+will be added to the _Product > Inventory_ interface for all products called "Quantity to restrict," "Restriction Notes," and "Quantity to Hide." 
+Please see below for more information on these fields, and how they influence product stock and customers' user experience. 
+
+    - **Quantity to Restrict:** If you wish to only allow a certain number of this product to be purchased per transaction, enter it here
+    - **Restriction Notes:** If you are restricting amounts of this product per transaction, you can enter a custom error message here for when customers attempt to purchase more
+    - **Quantity to Hide:** If you are reserving, or hiding, a certain number of product from being displayed in stock counts and being sold, enter that number here
 
 == Changelog ==
 
