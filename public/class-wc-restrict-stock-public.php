@@ -142,17 +142,41 @@ class Wc_Restrict_Stock_Public {
 	public function wcrs_cart_update_quantity( $cart_item_key, $quantity, $old_quantity, $cart ) {
 		$cart_data = $cart->get_cart();
 		$cart_item = $cart_data[$cart_item_key];
+
+		/* Get information about any product quantity restrictions */
 		$restrict_qty = $cart_item['data']->get_meta( 'wcrs_restrict_count' );
 		$restrict_qty_notes = $this->get_restriction_quantity_notes( $cart_item['data']->get_id() );
+
+		/* Get information about any hidden/reserved for this product */
+		$hide_qty = $cart_item['data']->get_meta( 'wcrs_hide_count' );
+
 		$product_stock = $cart_item['data']->get_stock_quantity();
 
-		if( !is_numeric( $restrict_qty ) || $restrict_qty == 0 ) {
-			return;
+		if( is_numeric( $restrict_qty ) && $restrict_qty > 0 ) {
+			if( $quantity > $restrict_qty ) {
+				wc_add_notice( __( $restrict_qty_notes, 'woocommerce' ), 'error' );
+				$cart->cart_contents[ $cart_item_key ]['quantity'] = max( $old_quantity, $restrict_qty );
+			}
 		}
 
-		if( $quantity > $restrict_qty ) {
-			wc_add_notice( __( $restrict_qty_notes, 'woocommerce' ), 'error' );
-			$cart->cart_contents[ $cart_item_key ]['quantity'] = max( $old_quantity, $restrict_qty );
+		if( is_numeric( $hide_qty ) && $hide_qty > 0 ) {
+			if( $product_stock - $hide_qty - $quantity <= 0 ) {
+				/* Set quantity to maximum it can be (product stuck, minus what we're hiding) */
+				$cart->cart_contents[ $cart_item_key ]['quantity'] = $product_stock - $hide_qty;
+			}
+		}
+	}
+
+	public function wcrs_single_product_update_quantity() {
+		global $product;
+		$hide_qty = $product->get_meta( 'wcrs_hide_count' );
+		if( is_numeric( $hide_qty ) && $hide_qty > 0 ) {
+			$product->set_stock_quantity(
+				max( $product->get_stock_quantity() - $hide_qty, 0 )
+			);
+			if( $product->get_stock_quantity() == 0 ) {
+				$product->set_stock_status( 'outofstock' );
+			}
 		}
 	}
 }

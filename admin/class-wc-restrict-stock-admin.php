@@ -142,16 +142,46 @@ class Wc_Restrict_Stock_Admin {
 		);
 	}
 
+	/**
+	 * Register the custom field for tracking how much of a product to hide
+	 *
+	 * @since    1.0.0
+	 */
+	public function wcrs_create_inventory_hidden_field() {
+		woocommerce_wp_text_input(
+			array(
+				'id' => 'wcrs_hide_count',
+				'label' => __( 'Quantity to hide', 'woocommerce' ),
+				'class' => 'wcrs-custom-field',
+				'desc_tip' => true,
+				'description' => __( 'If you wish to hold sales on a certain number of this product, enter that number here.', 'woocommerce' ),
+				'value' => get_post_meta( get_the_ID(), 'wcrs_hide_count', true ),
+				'type' => 'number',
+				'custom_attributes' => array(
+					'step' 	=> 'any',
+					'min'	=> '0'
+				) 
+			)
+		);
+	}
+	
 	public function wcrs_save_inventory_restriction_field( $id, $post ) {
 		/* Sanitize for numeric, and ensure it's a positive int */
 		$restrict_count = is_numeric( $_POST['wcrs_restrict_count'] ) ?
-			max( 0, intval( $_POST['wcrs_restrict_count'] ) )
-			: 0;
+		max( 0, intval( $_POST['wcrs_restrict_count'] ) )
+		: 0;
 		update_post_meta( $id, 'wcrs_restrict_count', $restrict_count );
 	}
-
+	
+	public function wcrs_save_inventory_hidden_field( $id, $post ) {
+		/* Sanitize for numeric, and ensure it's a positive int */
+		$hide_count = is_numeric( $_POST['wcrs_hide_count'] ) ?
+		max( 0, intval( $_POST['wcrs_hide_count'] ) )
+		: 0;
+		update_post_meta( $id, 'wcrs_hide_count', $hide_count );
+	}
+	
 	public function wcrs_save_inventory_restriction_notes_field( $id, $post ) {
 		update_post_meta( $id, 'wcrs_restrict_count_notes', sanitize_text_field( $_POST['wcrs_restrict_count_notes'] ) );
 	}
-
 }
